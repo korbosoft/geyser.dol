@@ -39,7 +39,7 @@
 #define SAMPLE_RATE 48000
 #define RENDER_RATE SAMPLE_RATE * 2
 #define MIN_FREQ 440
-#define MAX_FREQ 880
+#define MAX_FREQ 1760
 
 #define VOICE_RUNNING			0x40000000
 
@@ -93,7 +93,7 @@ static void VoiceCallBack(AESNDPB *pb, u32 state)
 
 
 s16 *generate_sine(void) {
-    double freq = ((double)rand() / (double)RAND_MAX) * ((MAX_FREQ + MIN_FREQ) - MIN_FREQ);
+    double freq = ((double)rand() / (double)RAND_MAX) * (MAX_FREQ - MIN_FREQ) + MIN_FREQ;
     printf("%f", freq);
 
     s16 *output_buffer = malloc(SAMPLE_RATE * 2);
@@ -130,7 +130,6 @@ typedef struct {
 Rect random_rectangle(void) {
     const f32 x = (float)rand() / (float)RAND_MAX * rmode->fbWidth;
     const f32 y = (float)rand() / (float)RAND_MAX * rmode->efbHeight;
-    printf("%f", ((float)rand() / (float)RAND_MAX) * (rmode->fbWidth - x));
     return (Rect){
         x,
         y,
@@ -172,13 +171,15 @@ int main() {
     WPAD_Init();
     // WPAD_SetDataFormat(WPAD_CHAN_0, WPAD_FMT_BTNS_ACC_IR);
     delay(1);
+    s16 *soundBuf = generate_sine();
     voice = AESND_AllocateVoice(VoiceCallBack);
+    AESND_PlayVoice(voice, VOICE_MONO16, soundBuf, SAMPLE_RATE * 2, SAMPLE_RATE, 0, false);
     while(1) {
         char str[25];
         if (diff_sec(start,end)) {
             if (slide == 9999) break;
 
-            s16 *soundBuf = generate_sine();
+            soundBuf = generate_sine();
             AESND_SetVoiceStop(voice, true);
             voice = AESND_AllocateVoice(VoiceCallBack);
             AESND_PlayVoice(voice, VOICE_MONO16, soundBuf, SAMPLE_RATE * 2, SAMPLE_RATE, 0, false);
@@ -193,9 +194,10 @@ int main() {
         } else end = gettime();
         // WPAD_SetVRes(0, 640, 480);
         WPAD_ScanPads();
-        // const u32 wpaddown = WPAD_ButtonsDown(0);
+        const u32 wpaddown = WPAD_ButtonsDown(0);
         // const u32 wpadheld = WPAD_ButtonsHeld(0);
 
+        if (wpaddown & WPAD_BUTTON_HOME) break;
         // WPAD_IR(WPAD_CHAN_0, &ir1);
 
         GRRLIB_FillScreen(GRRLIB_WHITE);    // Clear the screen
@@ -215,9 +217,12 @@ int main() {
 
         GRRLIB_Render();
     }
-    // Free some textures
+
+    AESND_FreeVoice(voice);
+
     GRRLIB_FreeTTF(font);
     GRRLIB_Exit(); // Be a good boy, clear the memory allocated by GRRLIB
+    exit(0);
     return 0;
 }
 
