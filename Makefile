@@ -15,7 +15,7 @@ include $(DEVKITPPC)/wii_rules
 # SOURCES is a list of directories containing source code
 # INCLUDES is a list of directories containing extra header files
 #---------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
+TARGET		:=	boot
 BUILD		:=	build
 SOURCES		:=	source
 DATA		:=	data
@@ -124,7 +124,7 @@ $(OUTPUT).elf: $(OFILES)
 $(OFILES_SOURCES) : $(HFILES)
 
 #---------------------------------------------------------------------------------
-# This rule links in binary data with the .jpg extension
+# This rule links in binary data with the .ttf extension
 #---------------------------------------------------------------------------------
 %.ttf.o	:	%.ttf
 #---------------------------------------------------------------------------------
