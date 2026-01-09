@@ -1,9 +1,10 @@
-/*===========================================
-        GRRLIB (GX Version)
-        - Example Code -
+/*
+	geyser.dol by Korbosoft et al.
+	(Generative Emulator Yielding Sequential Entropic Rectangles)
 
-        How To use Bitmap Fonts
-============================================*/
+	TODO: licensing information
+*/
+
 #include <grrlib.h>
 
 #include <ogc/lwp_watchdog.h>   // Needed for gettime and ticks_to_millisecs
