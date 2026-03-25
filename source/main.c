@@ -1,9 +1,3 @@
-/*===========================================
-        GRRLIB (GX Version)
-        - Example Code -
-
-        How To use Bitmap Fonts
-============================================*/
 #include <grrlib.h>
 
 #include <ogc/lwp_watchdog.h>   // Needed for gettime and ticks_to_millisecs
@@ -102,7 +96,7 @@ static void delay(unsigned s) {
     }
 }
 
-static u8 rectangleCount = 4;
+static u8 rectangleCount = 2;
 
 int main() {
     unsigned long long start = gettime(), end = gettime();
